@@ -1,0 +1,32 @@
+{
+  "name": "tripbox",
+  "main": "tripbox.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benjaminrau/tripbox.git"
+  },
+  "keywords": [
+    "onion",
+    "omega",
+    "oled",
+    "gps",
+    "nmea",
+    "gphoto2"
+  ],
+  "author": {
+    "name": "Benjamin Rau"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "dependencies": {
+    "mv": "*",
+    "nmea": "*",
+    "npm": "*",
+    "onion-oled-js": "*",
+    "omega_gpio": "*",
+    "promise": "*",
+    "trycatch": "*"
+  }
+}

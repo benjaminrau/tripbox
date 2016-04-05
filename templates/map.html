@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<title>Tripbox: Map</title>
+		<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.16.0/mapbox-gl.css' rel='stylesheet' />
+		<style>
+			body { margin:0; padding:0; }
+			#map { position:absolute; top:0; bottom:0; width:100%; }
+		</style>
+	</head>
+	<body>
+		<div id='map'></div>
+		<script>
+			mapboxgl.accessToken = 'pk.eyJ1IjoiYmVuamFtaW5yYXUiLCJhIjoiY2ltYXRyd3Y3MDAyM3ZrbTNraTc1b3g1aiJ9.Q3zB9brBgzPgLfnFmFHOHg';
+			var map = new mapboxgl.Map({
+				container: 'map',
+				style: 'mapbox://styles/mapbox/streets-v8',
+				center: {{{lastGeolocation}}},
+				zoom: 11
+			});
+
+			map.on('style.load', function () {
+				map.addSource("route", {
+					"type": "geojson",
+					"data": {
+						"type": "FeatureCollection",
+						"features" : [
+							{{#features}}
+							{
+								"type": "Feature",
+								"properties": {
+									"name": "{{name}}",
+									"images": {{{images}}}
+								},
+								"geometry": {
+									"type": "LineString",
+									"coordinates": {{{coordinates}}}
+								}
+							},
+							{{/features}}
+						]
+					}
+				});
+
+				map.addLayer({
+					"id": "route",
+					"type": "line",
+					"source": "route",
+					"layout": {
+						"line-join": "round",
+						"line-cap": "round"
+					},
+					"paint": {
+						"line-color": "#34495e",
+						"line-width": 8
+					}
+				});
+
+				map.addLayer({
+					"id": "route-hover",
+					"type": "line",
+					"source": "route",
+					"layout": {
+						"line-join": "round",
+						"line-cap": "round"
+					},
+					"paint": {
+						"line-color": "#f1c40f",
+						"line-width": 8
+					},
+					"filter": ["==", "name", ""]
+				});
+			});
+
+			var popup = new mapboxgl.Popup({
+				closeButton: false,
+				closeOnClick: true
+			});
+
+			map.on("mousemove", function(e) {
+				var features = map.queryRenderedFeatures(e.point, { layers: ["route"] });
+				if (features.length) {
+					var feature = features[0];
+					map.setFilter("route-hover", ["==", "name", feature.properties.name]);
+
+					if (0 < feature.properties.images.length) {
+						var coordinatesIndex = 3 < feature.geometry.coordinates.length ? Math.floor(feature.geometry.coordinates.length / 2) : 1;
+						var imageUri = -1 == window.location.href.indexOf('.htm') ? feature.properties.images.split(',')[0] : feature.properties.images.split(',')[0].split('/').pop();
+						popup.setLngLat(feature.geometry.coordinates[coordinatesIndex])
+								.setHTML('<img style="max-width: 200px; max-height: 200px;" src="' + imageUri + '" />')
+								.addTo(map);
+					}
+				} else {
+					map.setFilter("route-hover", ["==", "name", ""]);
+					//popup.remove();
+				}
+			});
+		</script>
+	</body>
+</html>

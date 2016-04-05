@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<title>Tripbox: Status</title>
+		<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+		<style type="text/css">
+			dt {
+				display: inline-block;
+			}
+			.lastPhoto {
+				max-width: 100%;
+			}
+		</style>
+		<script>
+			setTimeout(function() { location.reload(); }, 15000);
+		</script>
+	</head>
+	<body>
+		<h2>General info</h2>
+		<dl>
+			<dt>Current latitude</dt>
+			<dd>{{currentGeolocation.geolocation.latitude}}</dd>
+			<dt>Current longitude</dt>
+			<dd>{{currentGeolocation.geolocation.longitude}}</dd>
+			<dt>Last photo filename</dt>
+			<dd>{{lastPhoto.fileName}}</dd>
+			<dt>Last photo time</dt>
+			<dd>{{lastPhoto.timestamp}}</dd>
+			<dt>Distance to last photo</dt>
+			<dd>{{lastPhoto.distance}}</dd>
+		</dl>
+
+		<h2>Last Photo</h2>
+		<img src="lastPhoto.jpg" class="lastPhoto" />
+	</body>
+</html>
